@@ -1,0 +1,161 @@
+CREATE TABLE "results_sprint"(
+    "resultID" VARCHAR(255) NOT NULL,
+    "raceID" VARCHAR(255) NOT NULL,
+    "driverID" VARCHAR(255) NOT NULL,
+    "constructorID" VARCHAR(255) NOT NULL,
+    "number" BIGINT NOT NULL,
+    "grid" BIGINT NOT NULL,
+    "position" BIGINT NOT NULL,
+    "position_text" BIGINT NOT NULL,
+    "position_order" BIGINT NOT NULL,
+    "points" BIGINT NOT NULL,
+    "laps" BIGINT NOT NULL,
+    "completed_time" TIME(0) WITHOUT TIME ZONE NOT NULL,
+    "time_ms" BIGINT NOT NULL,
+    "fastest_lap" BIGINT NOT NULL,
+    "fastest_lap_time" TIME(0) WITHOUT TIME ZONE NOT NULL,
+    "status" TEXT NOT NULL
+);
+ALTER TABLE
+    "results_sprint" ADD PRIMARY KEY("resultID");
+CREATE TABLE "pit_stops"(
+    "raceID" VARCHAR(255) NOT NULL,
+    "driverID" VARCHAR(255) NOT NULL,
+    "stop" BIGINT NOT NULL,
+    "lap" BIGINT NOT NULL,
+    "time" TIME(0) WITHOUT TIME ZONE NOT NULL,
+    "duration" BIGINT NOT NULL,
+    "time_ms" BIGINT NOT NULL
+);
+ALTER TABLE
+    "pit_stops" ADD PRIMARY KEY("raceID");
+CREATE TABLE "results_qualifying"(
+    "qualifyid" VARCHAR(255) NOT NULL,
+    "raceID" VARCHAR(255) NOT NULL,
+    "driverID" VARCHAR(255) NOT NULL,
+    "constructorID" VARCHAR(255) NOT NULL,
+    "number" BIGINT NULL,
+    "position" BIGINT NULL,
+    "q1" TIME(0) WITHOUT TIME ZONE NULL,
+    "q2" TIME(0) WITHOUT TIME ZONE NULL,
+    "q3" TIME(0) WITHOUT TIME ZONE NULL
+);
+ALTER TABLE
+    "results_qualifying" ADD PRIMARY KEY("qualifyid");
+CREATE TABLE "results_race"(
+    "resultID" VARCHAR(255) NOT NULL,
+    "raceID" VARCHAR(255) NOT NULL,
+    "driverID" VARCHAR(255) NOT NULL,
+    "constructorID" VARCHAR(255) NOT NULL,
+    "car_number" BIGINT NOT NULL,
+    "grid" BIGINT NOT NULL,
+    "position" BIGINT NOT NULL,
+    "points" BIGINT NOT NULL,
+    "laps" BIGINT NOT NULL,
+    "time_completed" TIME(0) WITHOUT TIME ZONE NOT NULL,
+    "fastest_lap" TIME(0) WITHOUT TIME ZONE NOT NULL,
+    "rank" BIGINT NOT NULL,
+    "fastest_lap_time" TIME(0) WITHOUT TIME ZONE NOT NULL,
+    "fastest_lap_speed" BIGINT NOT NULL,
+    "status" TEXT NOT NULL
+);
+ALTER TABLE
+    "results_race" ADD PRIMARY KEY("resultID");
+ALTER TABLE
+    "results_race" ADD CONSTRAINT "results_race_raceid_unique" UNIQUE("raceID");
+ALTER TABLE
+    "results_race" ADD CONSTRAINT "results_race_driverid_unique" UNIQUE("driverID");
+CREATE TABLE "races"(
+    "raceID" VARCHAR(255) NOT NULL,
+    "year" BIGINT NOT NULL,
+    "round" BIGINT NOT NULL,
+    "circuitID" VARCHAR(255) NOT NULL,
+    "name" TEXT NOT NULL,
+    "date" DATE NOT NULL,
+    "time_gmt" TIME(0) WITHOUT TIME ZONE NOT NULL
+);
+ALTER TABLE
+    "races" ADD PRIMARY KEY("raceID");
+CREATE TABLE "drivers"(
+    "driverID" VARCHAR(255) NOT NULL,
+    "driverref" TEXT NOT NULL,
+    "car_number" BIGINT NOT NULL,
+    "code" TEXT NOT NULL,
+    "forename" TEXT NOT NULL,
+    "surname" TEXT NOT NULL,
+    "dob" DATE NOT NULL,
+    "nationality" TEXT NOT NULL
+);
+ALTER TABLE
+    "drivers" ADD PRIMARY KEY("driverID");
+CREATE TABLE "driver_standings"(
+    "driverstandingsID" VARCHAR(255) NOT NULL,
+    "raceID" VARCHAR(255) NOT NULL,
+    "driverID" VARCHAR(255) NOT NULL,
+    "points" BIGINT NOT NULL,
+    "position" BIGINT NOT NULL,
+    "position_text" BIGINT NOT NULL,
+    "wins" BIGINT NOT NULL
+);
+ALTER TABLE
+    "driver_standings" ADD PRIMARY KEY("driverstandingsID");
+CREATE TABLE "lap_times"(
+    "raceID" VARCHAR(255) NOT NULL,
+    "driverID" VARCHAR(255) NOT NULL,
+    "lap" BIGINT NOT NULL,
+    "position" BIGINT NOT NULL,
+    "time" TIME(0) WITHOUT TIME ZONE NULL,
+    "time_ms" BIGINT NULL
+);
+ALTER TABLE
+    "lap_times" ADD PRIMARY KEY("raceID");
+CREATE TABLE "constructors"(
+    "constructorID" VARCHAR(255) NOT NULL,
+    "constructorref" TEXT NOT NULL,
+    "con_name" TEXT NOT NULL,
+    "nationality" TEXT NOT NULL
+);
+ALTER TABLE
+    "constructors" ADD PRIMARY KEY("constructorID");
+CREATE TABLE "circuits"(
+    "circuitID" VARCHAR(255) NOT NULL,
+    "circuitref" TEXT NOT NULL,
+    "name" VARCHAR(255) NOT NULL,
+    "location" TEXT NOT NULL,
+    "country" TEXT NOT NULL,
+    "lat" BIGINT NOT NULL,
+    "lng" BIGINT NOT NULL,
+    "alt" BIGINT NOT NULL
+);
+ALTER TABLE
+    "circuits" ADD PRIMARY KEY("circuitID");
+CREATE TABLE "constructor_standings"(
+    "constructorstandingsID" VARCHAR(255) NOT NULL,
+    "raceID" VARCHAR(255) NOT NULL,
+    "constructorID" VARCHAR(255) NOT NULL,
+    "points" BIGINT NOT NULL,
+    "position" BIGINT NOT NULL,
+    "wins" BIGINT NOT NULL
+);
+-- ALTER TABLE
+--     "constructor_standings" ADD PRIMARY KEY("constructorstandingsID");
+-- ALTER TABLE
+--     "driver_standings" ADD CONSTRAINT "driver_standings_raceid_foreign" FOREIGN KEY("raceID") REFERENCES "races"("raceID");
+-- ALTER TABLE
+--     "results_qualifying" ADD CONSTRAINT "results_qualifying_driverid_foreign" FOREIGN KEY("driverID") REFERENCES "results_race"("driverID");
+-- ALTER TABLE
+--     "driver_standings" ADD CONSTRAINT "driver_standings_driverid_foreign" FOREIGN KEY("driverID") REFERENCES "drivers"("driverID");
+-- ALTER TABLE
+--     "results_race" ADD CONSTRAINT "results_race_raceid_foreign" FOREIGN KEY("raceID") REFERENCES "pit_stops"("raceID");
+-- ALTER TABLE
+--     "results_sprint" ADD CONSTRAINT "results_sprint_raceid_foreign" FOREIGN KEY("raceID") REFERENCES "races"("raceID");
+-- ALTER TABLE
+--     "results_qualifying" ADD CONSTRAINT "results_qualifying_raceid_foreign" FOREIGN KEY("raceID") REFERENCES "races"("raceID");
+-- ALTER TABLE
+--     "constructor_standings" ADD CONSTRAINT "constructor_standings_constructorid_foreign" FOREIGN KEY("constructorID") REFERENCES "constructors"("constructorID");
+-- ALTER TABLE
+--     "results_race" ADD CONSTRAINT "results_race_raceid_foreign" FOREIGN KEY("raceID") REFERENCES "lap_times"("raceID");
+-- ALTER TABLE
+--     "constructor_standings" ADD CONSTRAINT "constructor_standings_raceid_foreign" FOREIGN KEY("raceID") REFERENCES "races"("raceID");
+-- ALTER TABLE
+--     "races" ADD CONSTRAINT "races_circuitid_foreign" FOREIGN KEY("circuitID") REFERENCES "circuits"("circuitID");
